@@ -2,26 +2,33 @@
 title: "Happy Data"
 author: "Adam, Dillon, Ruben, Nick"
 format: html
-editor: visual
+  html:
+    self-contained: true
+    code-tools: true
+    toc: true
+    number-sections: true
+    code-fold: true
+editor: source
+execute:
+  error: true
+  echo: true
+  message: false
+  warning: false
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
+```{r setup}
+library(tidyverse)
+library(here)
+happy <- read.csv(here::here("hapiscore_whr.csv"))
 ```
 
-You can add options to executable code like this
 
 ```{r}
-#| echo: false
-2 * 2
+# rename columns
+happy <- happy |>
+  dplyr::rename_with(.fn = ~str_sub(.x, 2),
+                     .cols = X2004:X2020)
+head(happy)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+
