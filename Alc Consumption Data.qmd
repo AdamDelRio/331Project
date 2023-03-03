@@ -1,27 +1,34 @@
 ---
-title: "Alcohol Consumption"
-author: "Adam, Dillon, Ruben, Nick"
-format: html
-editor: visual
+title: "Lab 8: The 12 Days of Christmas"
+subtitle: "Sing the Full Song"
+author: "Adam Del Rio"
+format: 
+  html:
+    self-contained: true
+    code-tools: true
+    toc: true
+    number-sections: true
+editor: source
+execute: 
+  error: true
+  echo: true
+  message: false
+  warning: false
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## DATA CLEANING
 
 ```{r}
-1 + 1
+library(tidyverse)
 ```
-
-You can add options to executable code like this
 
 ```{r}
-#| echo: false
-2 * 2
+alc <- read.csv("sh_alc_pcap_li.csv")
+alc <- alc |> 
+  rename_with(.fn = ~str_sub(.x,2), 
+                          .cols = X1999:X2017)
+alc <- alc |> 
+  mutate(
+    across("1999":"2017", as.numeric))
+alc
 ```
-
-The `echo: false` option disables the printing of code (only output is displayed).
