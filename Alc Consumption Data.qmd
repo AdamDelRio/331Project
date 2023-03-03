@@ -1,7 +1,7 @@
 ---
-title: "Lab 8: The 12 Days of Christmas"
+title: "Alc Consumption Data"
 subtitle: "Sing the Full Song"
-author: "Adam Del Rio"
+author: "Adam Del Rio, Dillon Murphy, Nick Patrick, Ruben Jimenez"
 format: 
   html:
     self-contained: true
@@ -18,7 +18,7 @@ execute:
 
 ## DATA CLEANING
 
-```{r}
+```{r Setup}
 library(tidyverse)
 ```
 
@@ -30,5 +30,13 @@ alc <- alc |>
 alc <- alc |> 
   mutate(
     across("1999":"2017", as.numeric))
-alc
+alc |> head()
 ```
+```{r}
+#Pivoting Longer
+alc_final <- alc |> 
+  pivot_longer(cols = `1999`:`2017`,
+               names_to = "year",
+               values_to = "alcohol_consumption")
+```
+
