@@ -1,7 +1,6 @@
 ---
-title: "Alc Consumption Data"
-subtitle: "Sing the Full Song"
-author: "Adam Del Rio, Dillon Murphy, Nick Patrick, Ruben Jimenez"
+title: "Alcohol Consumption Data"
+author: "Adam, Dillon, Nick, Ruben"
 format: 
   html:
     self-contained: true
@@ -20,10 +19,12 @@ execute:
 
 ```{r Setup}
 library(tidyverse)
+library(here)
+alc <- read.csv(here::here("sh_alc_pcap_li.csv"))
 ```
 
 ```{r}
-alc <- read.csv("sh_alc_pcap_li.csv")
+#Data Cleaning
 alc <- alc |> 
   rename_with(.fn = ~str_sub(.x,2), 
                           .cols = X1999:X2017)
@@ -32,6 +33,7 @@ alc <- alc |>
     across("1999":"2017", as.numeric))
 alc |> head()
 ```
+
 ```{r}
 #Pivoting Longer
 alc_final <- alc |> 
@@ -39,4 +41,3 @@ alc_final <- alc |>
                names_to = "year",
                values_to = "alcohol_consumption")
 ```
-

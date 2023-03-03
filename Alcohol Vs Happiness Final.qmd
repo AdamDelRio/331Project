@@ -16,23 +16,60 @@ execute:
   warning: false
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
+```{r Setup}
+library(tidyverse)
+library(here)
+alc <- read.csv(here::here("sh_alc_pcap_li.csv"))
+happy <- read.csv(here::here("hapiscore_whr.csv"))
 ```
 
-You can add options to executable code like this
-
 ```{r}
-#| echo: false
-2 * 2
+#Data Cleaning
+alc <- alc |> 
+  rename_with(.fn = ~str_sub(.x,2), 
+                          .cols = X1999:X2017)
+alc <- alc |> 
+  mutate(
+    across("1999":"2017", as.numeric))
+alc |> head()
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```{r}
+# rename columns
+happy <- happy |>
+  dplyr::rename_with(.fn = ~str_sub(.x, 2),
+                     .cols = X2004:X2020)
+happy |> head()
+```
+
+```{r}
+#Pivoting Longer
+alc_final <- alc |> 
+  pivot_longer(cols = `1999`:`2017`,
+               names_to = "year",
+               values_to = "alcohol_consumption")
+```
+
+```{r}
+#Pivoting Longer
+happy_final <- happy |> 
+  pivot_longer(cols = `2004`:`2020`,
+               names_to = "year",
+               values_to = "happiness_score")
+```
+
+```{r}
+#Casting columns
+happy_final <- happy_final |>  
+  mutate(
+    across("year", as.numeric))
+alc_final <- alc_final |>  
+  mutate(
+    across("year", as.numeric))
+```
+
+```{r}
+#Inner Joining the data
+final_data <- inner_join(happy_final, alc_final, by = c("year", "country"))
+```
+
