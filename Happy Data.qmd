@@ -22,7 +22,6 @@ library(here)
 happy <- read.csv(here::here("hapiscore_whr.csv"))
 ```
 
-
 ```{r}
 # rename columns
 happy <- happy |>
@@ -32,3 +31,10 @@ head(happy)
 ```
 
 
+```{r}
+#Pivoting Longer
+happy <- happy |> 
+  pivot_longer(cols = `2004`:`2020`,
+               names_to = "year",
+               values_to = "happiness_score")
+```
