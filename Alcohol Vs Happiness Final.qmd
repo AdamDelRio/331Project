@@ -30,8 +30,8 @@ alc <- alc |>
                           .cols = X1999:X2017)
 alc <- alc |> 
   mutate(
-    across("1999":"2017", as.numeric))
-alc |> head()
+    across("1999":"2017", as.numeric)) |> 
+  select("country", "1999", "2004", "2009", "2014", "2017")
 ```
 
 ```{r}
@@ -39,7 +39,6 @@ alc |> head()
 happy <- happy |>
   dplyr::rename_with(.fn = ~str_sub(.x, 2),
                      .cols = X2004:X2020)
-happy |> head()
 ```
 
 ```{r}
@@ -47,7 +46,9 @@ happy |> head()
 alc_final <- alc |> 
   pivot_longer(cols = `1999`:`2017`,
                names_to = "year",
-               values_to = "alcohol_consumption")
+               values_to = "alcohol_consumption")|>  
+  mutate(
+    across("year", as.numeric))
 ```
 
 ```{r}
@@ -55,15 +56,7 @@ alc_final <- alc |>
 happy_final <- happy |> 
   pivot_longer(cols = `2004`:`2020`,
                names_to = "year",
-               values_to = "happiness_score")
-```
-
-```{r}
-#Casting columns
-happy_final <- happy_final |>  
-  mutate(
-    across("year", as.numeric))
-alc_final <- alc_final |>  
+               values_to = "happiness_score")|>  
   mutate(
     across("year", as.numeric))
 ```
@@ -71,5 +64,6 @@ alc_final <- alc_final |>
 ```{r}
 #Inner Joining the data
 final_data <- inner_join(happy_final, alc_final, by = c("year", "country"))
+final_data
 ```
 
