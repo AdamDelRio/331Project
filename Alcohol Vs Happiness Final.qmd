@@ -1,7 +1,7 @@
 ---
 title: "Alcohol vs. Happiness: an Investigation into Alcoholism"
 author: "Adam, Dillon, Ruben, Nick"
-format: html
+format:
   html:
     self-contained: true
     code-tools: true
@@ -16,6 +16,8 @@ execute:
   warning: false
 ---
 
+## Setup
+
 ```{r Setup}
 library(tidyverse)
 library(here)
@@ -23,36 +25,58 @@ alc <- read.csv(here::here("sh_alc_pcap_li.csv"))
 happy <- read.csv(here::here("hapiscore_whr.csv"))
 ```
 
+
+## Intro
+
+As college students, our group was especially interested regarding the implications alcohol has on the quality of life. So, we set out to investigate the existence of such association. Based on empirical data collected in [“The Association between Mental Wellbeing, Levels of Harmful Drinking, and Drinking Motivations: A Cross-Sectional Study of the UK Adult Population,”](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6069385/) which demonstrates that low-risk drinking makes for higher well-being than abstinence, harmful drinking, and hazardous drinking, we hypothesize that happiness has a positive association with alcohol consumption until a certain point at which it will being to have a negative association. This certain point will likely be determined in our analysis.
+
+
+
+## Happiness Dataset
+
+The “happiness score” dataset measures the national average response to a Cantril life ladder survey from 2004 to 2020. The Cantril life ladder is a well-being quantitative assessment based on an imaginary step ladder where the bottom rung is minimum life satisfaction (0) and the top rung is the best possible life satisfaction (10), explained further [here.](https://news.gallup.com/poll/122453/understanding-gallup-uses-cantril-scale.aspx.) Scores were then scaled from 0-100 to effectively communicate percentages.
+
+
+## Alcohol Dataset
+
+The “alcohol consumption per capita” dataset measures projected estimates for the quantity of alcohol consumed in people over the age of 15 from 1999 to 2017, in liters. Data were collected quinquennially, with the exception of the 2014-2017 timespan, where data were collected triennially. 
+
+
+## Data Cleaning
+
+We started data cleaning with the renaming of columns for both data sets. This was determined as the first step because we realized our primary objective for the cleaning was to transform the datasets into one long dataset. To do that, the data had to be long, so our “XYear” columns had to be numeric. We sub stringed the column titles to only include the year number. We also realized there was not much justification to keeping the many years from the alcohol dataset that were entirely missing.
+
 ```{r}
-#Data Cleaning
+# rename columns
 alc <- alc |> 
   rename_with(.fn = ~str_sub(.x,2), 
                           .cols = X1999:X2017)
+
+
+happy <- happy |>
+  dplyr::rename_with(.fn = ~str_sub(.x, 2),
+                     .cols = X2004:X2020)
+
+# drop unnecessary missing alcohol columns
 alc <- alc |> 
   mutate(
     across("1999":"2017", as.numeric)) |> 
   select("country", "1999", "2004", "2009", "2014", "2017")
 ```
 
-```{r}
-# rename columns
-happy <- happy |>
-  dplyr::rename_with(.fn = ~str_sub(.x, 2),
-                     .cols = X2004:X2020)
-```
+
+Both datasets were then pivoted longer, and "year" columns were converted to numeric variables.
 
 ```{r}
-#Pivoting Longer
+# Pivoting Longer, convert years to numeric
 alc_final <- alc |> 
   pivot_longer(cols = `1999`:`2017`,
                names_to = "year",
                values_to = "alcohol_consumption")|>  
   mutate(
     across("year", as.numeric))
-```
 
-```{r}
-#Pivoting Longer
+
 happy_final <- happy |> 
   pivot_longer(cols = `2004`:`2020`,
                names_to = "year",
@@ -61,9 +85,11 @@ happy_final <- happy |>
     across("year", as.numeric))
 ```
 
+
+Then, we joined the datasets using an inner join so we could keep only the years both datasets had in common.
+
 ```{r}
-#Inner Joining the data
+# Inner Joining the data
 final_data <- inner_join(happy_final, alc_final, by = c("year", "country"))
 final_data
 ```
-
