@@ -21,8 +21,8 @@ execute:
 ```{r Setup}
 library(tidyverse)
 library(here)
-alc <- read.csv(here::here("sh_alc_pcap_li.csv"))
-happy <- read.csv(here::here("hapiscore_whr.csv"))
+alc <- read_csv(here::here("sh_alc_pcap_li.csv"))
+happy <- read_csv(here::here("hapiscore_whr.csv"))
 ```
 
 
@@ -43,34 +43,13 @@ The “alcohol consumption per capita” dataset measures projected estimates fo
 
 
 ## Data Cleaning
-
-We started data cleaning with the renaming of columns for both data sets. This was determined as the first step because we realized our primary objective for the cleaning was to transform the datasets into one long dataset. To do that, the data had to be long, so our “XYear” columns had to be numeric. We sub stringed the column titles to only include the year number. We also realized there was not much justification to keeping the many years from the alcohol dataset that were entirely missing.
-
-```{r}
-# rename columns
-alc <- alc |> 
-  rename_with(.fn = ~str_sub(.x,2), 
-                          .cols = X1999:X2017)
-
-
-happy <- happy |>
-  dplyr::rename_with(.fn = ~str_sub(.x, 2),
-                     .cols = X2004:X2020)
-
-# drop unnecessary missing alcohol columns
-alc <- alc |> 
-  mutate(
-    across("1999":"2017", as.numeric)) |> 
-  select("country", "1999", "2004", "2009", "2014", "2017")
-```
-
-
-Both datasets were then pivoted longer, and "year" columns were converted to numeric variables.
+Both datasets were then pivoted longer, and "year" columns were converted to numeric variables. We also realized there was not much justification to keeping the many years from the alcohol dataset that were entirely missing.
 
 ```{r}
-# Pivoting Longer, convert years to numeric
+# Pivoting Longer, convert years to numeric and dropping unnecessary missing alcohol columns
 alc_final <- alc |> 
-  pivot_longer(cols = `1999`:`2017`,
+  select("country", "1999", "2004", "2009", "2014", "2017") |> 
+  pivot_longer(cols = "1999":"2017",
                names_to = "year",
                values_to = "alcohol_consumption")|>  
   mutate(
