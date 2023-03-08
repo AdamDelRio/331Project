@@ -21,6 +21,7 @@ execute:
 ```{r Setup}
 library(tidyverse)
 library(here)
+library(broom)
 alc <- read_csv(here::here("sh_alc_pcap_li.csv"))
 happy <- read_csv(here::here("hapiscore_whr.csv"))
 ```
@@ -72,3 +73,30 @@ Then, we joined the datasets using an inner join so we could keep only the years
 final_data <- inner_join(happy_final, alc_final, by = c("year", "country"))
 final_data
 ```
+
+```{r}
+ggplot(data = final_data, mapping = aes(x = alcohol_consumption, y = happiness_score)) +
+  geom_point() +
+  geom_smooth(method = "lm") + 
+  theme(axis.title.y = element_blank())
+```
+```{r}
+average_year <- final_data |> group_by(year) |> summarize(mean_happy = mean(happiness_score, na.rm = TRUE),
+                                                          mean_alc = mean(alcohol_consumption, na.rm = TRUE))
+ggplot(data = average_year, mapping = aes(x = year, y = mean_happy)) +
+  geom_line()
+```
+
+```{r}
+ggplot(data = average_year, mapping = aes(x = year, y = mean_alc)) +
+  geom_line()
+```
+
+
+```{r}
+my_model <- lm(happiness_score ~ alcohol_consumption, 
+               data = final_data
+               )
+summary(my_model)
+```
+
