@@ -80,7 +80,11 @@ ggplot(data = final_data, mapping = aes(x = alcohol_consumption, y = happiness_s
   geom_point() +
   geom_smooth(method = "lm") + 
   theme(axis.title.y = element_blank()) +
-  labs()
+  labs(title = "Happiness Score By Alcohol Consumption",
+       x = "Average Alcohol Consumption",
+       subtitle = "Average Happiness Score",
+       y= "") +
+  theme_bw()
 ```
 ```{r}
 average_year <- final_data |> 
@@ -88,18 +92,29 @@ average_year <- final_data |>
   summarize(mean_happy = mean(happiness_score, na.rm = TRUE),
             mean_alc = mean(alcohol_consumption, na.rm = TRUE))
 plot1 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_happy)) +
-  geom_line()
+  geom_line() +
+  labs(title = "Average Happiness Over Time (Pts)",
+       x = "Year",
+       y= "",
+       subtitle = "Average Happiness Score") +
+  theme_bw()
 
 plot2 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_alc)) +
-  geom_line()
+  geom_line() +
+  labs(title = "Average Alcohol Consumption (L) \nOver Time",
+       x = "Year",
+       y= "",
+       subtitle = "Average Alcohol Consumption") +
+  theme_bw()
 
-plot1 + plot2
+plot1 + plot2 
 ```
 
 ```{r}
 my_model <- lm(happiness_score ~ alcohol_consumption, 
                data = final_data
                )
+
 augment(my_model)
 ```
 
