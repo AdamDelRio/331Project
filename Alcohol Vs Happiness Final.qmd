@@ -153,4 +153,4 @@ model_fit <- round((fitted_var/(response_var))*100,
                    digits = 3)
 ```
 
-Based on the $R^{2}$ statistic we calculated for the model we fit, only `r model_fit`% of variability in the response values was accounted for by the regression model. 
+Based on the $R^{2}$ we calculated for the model we fit, only `r model_fit`% of variability in the response values were accounted for by the regression model. With such a low $R^{2}$ this confirms that our model is unfit for the data.
