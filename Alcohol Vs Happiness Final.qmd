@@ -100,6 +100,6 @@ plot1 + plot2
 my_model <- lm(happiness_score ~ alcohol_consumption, 
                data = final_data
                )
-broom::glance(my_model)
+augment(my_model)
 ```
 
