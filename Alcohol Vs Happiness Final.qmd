@@ -75,6 +75,7 @@ Then, we joined the datasets using an inner join so we could keep only the years
 final_data <- inner_join(happy_final, alc_final, by = c("year", "country"))
 final_data
 ```
+## Data Visualization
 
 ```{r}
 ggplot(data = final_data, mapping = aes(x = alcohol_consumption, y = happiness_score)) +
@@ -110,12 +111,20 @@ plot2 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_alc)) +
 
 plot1 + plot2 
 ```
-
+## Linear Regression
 ```{r}
 my_model <- lm(happiness_score ~ alcohol_consumption, 
                data = final_data
                )
+my_model |> tidy()
+```
+$$
+\widehat{happiness~score} = 1.001167(alcohol~consumption) + 48.580332
+$$
 
+## Model Fit
+
+```{r}
 augmented <- augment(my_model)
 response_var <- var(augmented$happiness_score)
 fitted_var <- var(augmented$.fitted)
