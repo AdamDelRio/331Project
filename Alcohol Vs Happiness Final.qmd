@@ -88,6 +88,9 @@ ggplot(data = final_data, mapping = aes(x = alcohol_consumption, y = happiness_s
        y= "") +
   theme_bw()
 ```
+
+It appears from our linear regression model investigating the strength of the association between mean total alcohol consumption per capita in liters and mean happiness score that there is a weak positive association between these variables.
+
 ```{r}
 average_year <- final_data |> 
   group_by(year) |> 
@@ -111,6 +114,9 @@ plot2 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_alc)) +
 
 plot1 + plot2 
 ```
+
+Based on our time series plots for mean happiness score and mean total alcohol consumption per capita in liters, both happiness and alcohol consumption have decreased over time.
+
 ## Linear Regression
 ```{r}
 my_model <- lm(happiness_score ~ alcohol_consumption, 
@@ -121,6 +127,8 @@ my_model |> tidy()
 $$
 \widehat{happiness~score} = 1.001167(alcohol~consumption) + 48.580332
 $$
+
+Based on the model we fit predicting mean happiness score based on mean total alcohol consumption per capita, we can see that for every 1 liter increase in mean total alcohol consumption, happiness score increases by approximately 1.001. At 0 liters mean total alcohol consumption per capita, we predict happiness score to be approximately 48.58. 
 
 ## Model Fit
 
@@ -140,3 +148,9 @@ table |> datatable(class = "cell-border stripe hover",
                                   info = FALSE))
 ```
 
+```{r}
+model_fit <- round((fitted_var/(response_var))*100,
+                   digits = 3)
+```
+
+Based on the $R^{2}$ statistic we calculated for the model we fit, only `r model_fit`% of variability in the response values was accounted for by the regression model. 
