@@ -22,6 +22,7 @@ execute:
 library(tidyverse)
 library(here)
 library(broom)
+library(patchwork)
 alc <- read_csv(here::here("sh_alc_pcap_li.csv"))
 happy <- read_csv(here::here("hapiscore_whr.csv"))
 ```
@@ -78,25 +79,27 @@ final_data
 ggplot(data = final_data, mapping = aes(x = alcohol_consumption, y = happiness_score)) +
   geom_point() +
   geom_smooth(method = "lm") + 
-  theme(axis.title.y = element_blank())
+  theme(axis.title.y = element_blank()) +
+  labs()
 ```
 ```{r}
-average_year <- final_data |> group_by(year) |> summarize(mean_happy = mean(happiness_score, na.rm = TRUE),
-                                                          mean_alc = mean(alcohol_consumption, na.rm = TRUE))
-ggplot(data = average_year, mapping = aes(x = year, y = mean_happy)) +
+average_year <- final_data |> 
+  group_by(year) |> 
+  summarize(mean_happy = mean(happiness_score, na.rm = TRUE),
+            mean_alc = mean(alcohol_consumption, na.rm = TRUE))
+plot1 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_happy)) +
   geom_line()
-```
 
-```{r}
-ggplot(data = average_year, mapping = aes(x = year, y = mean_alc)) +
+plot2 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_alc)) +
   geom_line()
-```
 
+plot1 + plot2
+```
 
 ```{r}
 my_model <- lm(happiness_score ~ alcohol_consumption, 
                data = final_data
                )
-summary(my_model)
+broom::glance(my_model)
 ```
 
