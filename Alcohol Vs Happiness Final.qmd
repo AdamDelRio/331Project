@@ -23,6 +23,7 @@ library(tidyverse)
 library(here)
 library(broom)
 library(patchwork)
+library(DT)
 alc <- read_csv(here::here("sh_alc_pcap_li.csv"))
 happy <- read_csv(here::here("hapiscore_whr.csv"))
 ```
@@ -92,7 +93,7 @@ average_year <- final_data |>
   summarize(mean_happy = mean(happiness_score, na.rm = TRUE),
             mean_alc = mean(alcohol_consumption, na.rm = TRUE))
 plot1 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_happy)) +
-  geom_line() +
+  geom_line(color = "blue") +
   labs(title = "Average Happiness Over Time (Pts)",
        x = "Year",
        y= "",
@@ -100,7 +101,7 @@ plot1 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_happy)) +
   theme_bw()
 
 plot2 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_alc)) +
-  geom_line() +
+  geom_line(color = "red") +
   labs(title = "Average Alcohol Consumption (L) \nOver Time",
        x = "Year",
        y= "",
@@ -115,6 +116,12 @@ my_model <- lm(happiness_score ~ alcohol_consumption,
                data = final_data
                )
 
-augment(my_model)
+augmented <- augment(my_model)
+response_var <- var(augmented$happiness_score)
+fitted_var <- var(augmented$.fitted)
+residual_var <- var(augmented$.resid)
+response_var
+fitted_var
+residual_var
 ```
 
