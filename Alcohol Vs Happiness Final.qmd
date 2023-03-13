@@ -96,6 +96,7 @@ average_year <- final_data |>
   group_by(year) |> 
   summarize(mean_happy = mean(happiness_score, na.rm = TRUE),
             mean_alc = mean(alcohol_consumption, na.rm = TRUE))
+
 plot1 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_happy)) +
   geom_line(color = "blue") +
   labs(title = "Average Happiness Over Time (Pts)",
@@ -115,7 +116,7 @@ plot2 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_alc)) +
 plot1 + plot2 
 ```
 
-Based on our time series plots for mean happiness score and mean total alcohol consumption per capita in liters, both happiness and alcohol consumption have decreased over time.
+For the plots above, we grouped the observations by year and found the mean happiness score and mean alcohol consumption per capita in liters. Based on our time series plots for mean happiness score and mean total alcohol consumption per capita in liters, both happiness and alcohol consumption have decreased over time. From 2004-2009, happiness decreased very rapidly from an average score around 64 happiness points all the way down to about 55 happiness points. Meanwhile average alcohol consumption was actually increasing very slightly. Past 2009, average happiness began to level off, and even increases after 2014. On the other hand, average alcohol consumption rapidly dropped from just under 6.35 liters per capita down to less than 6.1 liters.
 
 ## Linear Regression
 ```{r}
@@ -156,4 +157,4 @@ model_fit <- round((fitted_var/(response_var))*100,
                    digits = 3)
 ```
 
-Based on the $R^{2}$ we calculated for the model we fit, only `r model_fit`% of variability in the response values were accounted for by the regression model. With such a low $R^{2}$ this confirms that our model is unfit for the data.
+By dividing the amount of variation in the fitted values (values from our predictive model) by the total variation in the observed responses, we obtain an $R^{2}$ statistic representing the amount of variation explained by our model. In other words, this statistic explains how well our model can predict the pattern in the data. Based on the $R^{2}$ we calculated for the model we fit, only `r model_fit`% of variability in the response values were accounted for by the regression model. With such a low $R^{2}$ this confirms that our model is unfit for the data.
