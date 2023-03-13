@@ -134,9 +134,12 @@ Based on the model we fit predicting mean happiness score based on mean total al
 
 ```{r}
 augmented <- augment(my_model)
-response_var <- var(augmented$happiness_score)
-fitted_var <- var(augmented$.fitted)
-residual_var <- var(augmented$.resid)
+response_var <- var(augmented$happiness_score) |>
+  round(digits = 3)
+fitted_var <- var(augmented$.fitted) |> 
+  round(digits = 3)
+residual_var <- var(augmented$.resid) |> 
+  round(digits = 3)
 table <- data.frame(response_var, fitted_var, residual_var)
 table |> datatable(class = "cell-border stripe hover", 
                    colnames = c("Variation in Response",
