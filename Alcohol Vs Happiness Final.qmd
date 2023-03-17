@@ -19,6 +19,7 @@ execute:
 
 ```{r Setup}
 #| include: false
+set.seed(1234)
 library(tidyverse)
 library(here)
 library(broom)
@@ -92,11 +93,13 @@ final_data |>
 actual_reg <- ggplot(data = final_data, mapping = aes(x = alcohol_consumption, y = happiness_score)) +
   geom_point() +
   geom_smooth(method = "lm") + 
-  labs(title = "Happiness Score\nBy Alcohol Consumption",
+  labs(title = "Observed Happiness Score\nBy Alcohol Consumption",
        x = "Average Alcohol Consumption (L)",
-       subtitle = "Average Happiness Score (pts)",
+       subtitle = "Observed Average Happiness Score (pts)",
        y= NULL) +
-  theme_bw(base_family = "Times New Roman")
+  theme_bw(base_family = "Times New Roman") +
+  scale_x_continuous(limits = c(0, 20)) +
+  scale_y_continuous(limits = c(20, 90))
 actual_reg
 ```
 
@@ -195,7 +198,7 @@ noise <- function(x, mean = 0, sd){
 
 
 ```{r}
-preds <- predict(my_model) 
+preds <- predict(my_model)
 
 sd <- sigma(my_model)
 
@@ -219,7 +222,9 @@ sim_reg <- ggplot(data = simulated, mapping = aes(x = alcohol_consumption, y = h
        x = "Average Alcohol Consumption (L)",
        subtitle = "Predicted Average Happiness Score (pts)",
        y= NULL) +
-  theme_bw(base_family = "Times New Roman")
+  theme_bw(base_family = "Times New Roman") +
+  scale_x_continuous(limits = c(0, 20)) +
+  scale_y_continuous(limits = c(20, 90))
 
 actual_reg + sim_reg
 ```
