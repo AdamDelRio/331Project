@@ -16,10 +16,8 @@ execute:
   warning: false
 ---
 
-
 ```{r Setup}
 #| include: false
-set.seed(1234)
 library(tidyverse)
 library(here)
 library(broom)
@@ -28,6 +26,7 @@ library(DT)
 library(kableExtra)
 library(gganimate)
 library(gifski)
+library(transformr)
 alc <- read_csv(here::here("sh_alc_pcap_li.csv"))
 happy <- read_csv(here::here("hapiscore_whr.csv"))
 ```
@@ -199,18 +198,22 @@ noise <- function(x, mean = 0, sd){
             mean, 
             sd)
 }
+
+sim <- function(){
+  preds <- predict(my_model)
+
+  sd <- sigma(my_model)
+
+  tibble(sim_happiness_score = noise(preds, 
+                                           sd = sd)
+                   )
+}
 ```
 
 
 ```{r}
-preds <- predict(my_model)
-
-sd <- sigma(my_model)
-
-final_preds <- tibble(happiness_score = noise(preds, 
-                                           sd = sd)
-                   )
-
+set.seed(1234)
+final_preds <- sim()
 new <- final_data |> na.omit(alcohol_consumption)
 
 simulated <- final_preds |> mutate(
@@ -220,7 +223,7 @@ simulated <- final_preds |> mutate(
 
 
 ```{r}
-sim_reg <- ggplot(data = simulated, mapping = aes(x = alcohol_consumption, y = happiness_score)) +
+sim_reg <- ggplot(data = simulated, mapping = aes(x = alcohol_consumption, y = sim_happiness_score)) +
   geom_point() +
   geom_smooth(method = "lm") + 
   labs(title = "Predicted Happiness Score\nBy Alcohol Consumption",
@@ -232,5 +235,34 @@ sim_reg <- ggplot(data = simulated, mapping = aes(x = alcohol_consumption, y = h
   scale_y_continuous(limits = c(20, 90))
 
 actual_reg + sim_reg
+```
+
+```{r}
+r2s <- vector()
+for (i in c(1:1000)){
+  predicted <- sim()
+  sim_data <- new |> 
+    select(happiness_score) |> 
+    na.omit() |> 
+    bind_cols(predicted)
+  
+  sim_r2 <- lm(happiness_score ~ sim_happiness_score,
+               data = sim_data
+               ) |>
+    glance() |>
+    select(r.squared) |>
+    pull()
+  r2s <- append(r2s, sim_r2)
+}
+```
+
+
+```{r}
+ggplot(data = tibble(r2s), mapping = aes(x = r2s)) +
+  geom_histogram(aes(y = ..density..), fill = "skyblue") + 
+  geom_density(color = "darkgrey", size = 1) +
+  theme_minimal() + 
+  labs(x = bquote(R^2), y = "", title = "Histogram of 1000 Simulated R Squared Values",
+       subtitle = "Density")
 ```
 
