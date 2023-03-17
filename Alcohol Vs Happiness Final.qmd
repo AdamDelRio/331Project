@@ -26,6 +26,8 @@ library(broom)
 library(patchwork)
 library(DT)
 library(kableExtra)
+library(gganimate)
+library(gifski)
 alc <- read_csv(here::here("sh_alc_pcap_li.csv"))
 happy <- read_csv(here::here("hapiscore_whr.csv"))
 ```
@@ -100,7 +102,10 @@ actual_reg <- ggplot(data = final_data, mapping = aes(x = alcohol_consumption, y
   theme_bw(base_family = "Times New Roman") +
   scale_x_continuous(limits = c(0, 20)) +
   scale_y_continuous(limits = c(20, 90))
-actual_reg
+animate(actual_reg + transition_states(year,
+    transition_length = 2,
+    state_length = 1
+  ), fps = 15, duration = 15, renderer = gifski_renderer())
 ```
 
 It appears from our linear regression model investigating the strength of the association between mean total alcohol consumption per capita in liters and mean happiness score that there is a weak positive association between these variables.
