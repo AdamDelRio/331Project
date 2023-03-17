@@ -185,15 +185,35 @@ By dividing the amount of variation in the fitted values (values from our predic
 ### Simulation
 
 ```{r}
+noise <- function(x, mean = 0, sd){
+  x + rnorm(length(x), 
+            mean, 
+            sd)
+}
+```
+
+
+```{r}
 preds <- predict(my_model) 
 
 sd <- sigma(my_model)
 
-rand_errors <- rnorm(length(preds),0,sd)
+final_preds <- tibble(happiness_score = noise(preds, 
+                                           sd = sd)
+                   )
 
-final_preds <- preds + rand_errors
-
-#Predicted Data Set
 final_preds
-
 ```
+
+
+```{r}
+ggplot(data = final_data, mapping = aes(x = alcohol_consumption, y = happiness_score)) +
+  geom_point() +
+  geom_smooth(method = "lm") + 
+  labs(title = "Happiness Score By Alcohol Consumption",
+       x = "Average Alcohol Consumption (L)",
+       subtitle = "Average Happiness Score (pts)",
+       y= NULL) +
+  theme_bw(base_family = "Times New Roman")
+```
+
