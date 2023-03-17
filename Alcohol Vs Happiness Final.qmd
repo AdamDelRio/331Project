@@ -180,3 +180,20 @@ model_fit <- round((fitted_var/(response_var))*100,
 ```
 
 By dividing the amount of variation in the fitted values (values from our predictive model) by the total variation in the observed responses, we obtain an $R^{2}$ statistic representing the amount of variation explained by our model. In other words, this statistic explains how well our model can predict the pattern in the data. Based on the $R^{2}$ we calculated for the model we fit, only `r model_fit`% of variability in the response values were accounted for by the regression model. With such a low $R^{2}$ this confirms that our model is unfit for the data.
+
+
+### Simulation
+
+```{r}
+preds <- predict(my_model) 
+
+sd <- sigma(my_model)
+
+rand_errors <- rnorm(length(preds),0,sd)
+
+final_preds <- preds + rand_errors
+
+#Predicted Data Set
+final_preds
+
+```
