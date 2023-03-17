@@ -164,14 +164,14 @@ fitted_var <- var(augmented$.fitted) |>
 residual_var <- var(augmented$.resid) |> 
   round(digits = 3)
 table <- data.frame(response_var, fitted_var, residual_var)
-table |> datatable(class = "cell-border stripe hover", 
-                   colnames = c("Variation in Response",
-                                "Variation in the Fitted Values",
-                                "Variation in the Residuals"),
-                   rownames = FALSE,
-                   options = list(paging = FALSE, 
-                                  searching = FALSE, 
-                                  info = FALSE))
+table |> 
+  kbl(col.names = c("Variation in Response",
+                  "Variation in the Fitted Values",
+                  "Variation in the Residuals"),
+      caption = "Variation",
+      digits = 3) |>
+  kable_classic_2(html_font = "Times New Roman",
+                  lightable_options = "striped")
 ```
 
 ```{r}
