@@ -205,9 +205,7 @@ sim <- function(){
 
   sd <- sigma(my_model)
 
-  tibble(sim_happiness_score = noise(preds, 
-                                           sd = sd)
-                   )
+  tibble(sim_happiness_score = noise(preds, sd = sd))
 }
 ```
 
@@ -267,4 +265,4 @@ ggplot(data = tibble(r2s), mapping = aes(x = r2s)) +
   labs(x = bquote(R^2), y = "", title = "Histogram of 1000 Simulated R Squared Values",
        subtitle = "Density")
 ```
-
+Based on the distribution of 1000 $R^{2}$ values from the regressions, we can see that the model does not generate data that is remotely similar to what was observed. This makes sense since there did not end up being a pattern among the data or any large association between alcohol consumption and happiness score. Since the plot was so scattered with no apparent pattern, it would be hard for any model to be able to predict the observations.
