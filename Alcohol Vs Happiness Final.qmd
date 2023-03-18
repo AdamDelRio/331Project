@@ -85,7 +85,8 @@ final_data |>
                                   searching = TRUE, 
                                   info = TRUE))
 ```
-Our table contains 636 observations displaying mean happiness scores against mean alcohol consumptions. The maximum mean happiness score came from Denmark in 2004 at 80.2 pts, while the maximum mean alcohol consumption came from Moldova in 2004 at 19.9 L. The minimum mean happiness score came from Afghanistan in 2017 at 26.9 pts, while the minimum mean alcohol consumption came from Kuwait in both 2014 and 2017 at .003 L.
+
+Our table contains 636 observations displaying mean happiness scores over a year against mean alcohol consumptions over a single year within a single country. The maximum mean happiness score came from Denmark in 2004 at 80.2 pts, while the maximum mean alcohol consumption came from Moldova in 2004 at 19.9 L. The minimum mean happiness score came from Afghanistan in 2017 at 26.9 pts, while the minimum mean alcohol consumption came from Kuwait in both 2014 and 2017 at .003 L.
 
 
 ## Linear Regression
@@ -108,7 +109,7 @@ animate(actual_reg + transition_states(year,
   ), fps = 15, duration = 15, renderer = gifski_renderer())
 ```
 
-Based on our linear regression model investigating the strength of the association between total alcohol consumption and happiness score by each year, we can see that there is a weak positive association between these variables every year. Overall, there is likely a weak positive association between mean total alcohol consumption and happiness score.
+Based on our linear regression model investigating the strength of the association between alcohol consumption per capita and happiness score by each year, we can see that there is a weak positive association between these variables every year. Overall, there is likely a weak positive association between alcohol consumption per capita and happiness score.
 
 ```{r}
 average_year <- final_data |> 
@@ -135,7 +136,7 @@ plot2 <- ggplot(data = average_year, mapping = aes(x = year, y = mean_alc)) +
 plot1 + plot2 
 ```
 
-For the plots above, we grouped the observations by year and found the mean happiness score and mean alcohol consumption per capita in liters. Based on our time series plots for mean happiness score and mean total alcohol consumption per capita in liters, both happiness and alcohol consumption have decreased over time. From 2004-2009, happiness decreased very rapidly from an average score around 64 happiness points all the way down to about 55 happiness points. Meanwhile average alcohol consumption was actually increasing very slightly. Past 2009, average happiness began to level off, and even increases after 2014. On the other hand, average alcohol consumption rapidly dropped from just under 6.35 liters per capita down to less than 6.1 liters.
+For the plots above, we grouped the observations by year and found the mean happiness score and mean alcohol consumption per capita in liters. Based on our time series plots for mean happiness score and mean alcohol consumption per capita, both happiness and alcohol consumption have decreased over time. From 2004-2009, happiness decreased very rapidly from an average score around 64 happiness points all the way down to about 55 happiness points. Meanwhile average alcohol consumption was actually increasing very slightly. Past 2009, average happiness began to level off, and even increases after 2014. On the other hand, average alcohol consumption rapidly dropped from just under 6.35 liters per capita down to less than 6.1 liters.
 
 ## Model Fit
 
@@ -161,7 +162,7 @@ $$
 \widehat{happiness~score} = 1.001167(alcohol~consumption) + 48.580332
 $$
 
-Based on the model we fit predicting mean happiness score based on mean total alcohol consumption per capita, we can see that for every 1 liter increase in mean total alcohol consumption, happiness score increases by approximately 1.001. At 0 liters mean total alcohol consumption per capita, we predict happiness score to be approximately 48.58. 
+Based on the model we fit predicting happiness score by alcohol consumption per capita, we can see that for every 1 liter increase in alcohol consumption per capita, happiness score increases by approximately .001 pts. At 0 liters alcohol consumption per capita, we predict happiness score to be approximately 48.58 pts. 
 
 
 ```{r}
@@ -225,8 +226,8 @@ simulated <- final_preds |> mutate(
 sim_reg <- ggplot(data = simulated, mapping = aes(x = alcohol_consumption, y = sim_happiness_score)) +
   geom_point() +
   geom_smooth(method = "lm") + 
-  labs(title = "Predicted Happiness Score\nBy Alcohol Consumption",
-       x = "Average Alcohol Consumption (L)",
+  labs(title = "Predicted Happiness Score\nBy Alcohol Consumption Per Capita",
+       x = "Average Alcohol Consumption Per Capita (L)",
        subtitle = "Predicted Average Happiness Score (pts)",
        y= NULL) +
   theme_bw(base_family = "Times New Roman") +
@@ -235,7 +236,8 @@ sim_reg <- ggplot(data = simulated, mapping = aes(x = alcohol_consumption, y = s
 
 actual_reg + sim_reg
 ```
-As we can see by the visualizations of observed data and simulated data, the two plots do look awfully similar, especially the linear regression lines which look almost the same. However, there are still many differences. The simulated data seems to have a larger variance than the observed data. The simulated data has larger and smaller extreme values than the observed data, and these extreme values seem to occur more often. Also, the data is clustered differently within the two plots. While the observed data has a large cluster around 0 liters of average alcohol consumption, the simulated does not and instead has a similar cluster around 10 liters of average alcohol consumption that the observed data does not have.
+
+As we can see by the visualizations of observed data and simulated data, the two plots do look awfully similar, especially the linear regression lines which look almost the same. However, there are still many differences. The simulated data seems to have a larger variance than the observed data. The simulated data has larger and smaller extreme values than the observed data, and these extreme values seem to occur more often. Also, the data is clustered differently within the two plots. While the observed data has a large cluster around 0 liters of average alcohol consumption per capita, the simulated does not and instead has a similar cluster around 10 liters of average alcohol consumption per capita that the observed data does not have.
 
 ```{r}
 r2s <- vector()
@@ -265,4 +267,10 @@ ggplot(data = tibble(r2s), mapping = aes(x = r2s)) +
   labs(x = bquote(R^2), y = "", title = "Histogram of 1000 Simulated R Squared Values",
        subtitle = "Density")
 ```
-Based on the distribution of 1000 $R^{2}$ values from the regressions, we can see that the model does not generate data that is remotely similar to what was observed. This makes sense since there did not end up being a pattern among the data or any large association between alcohol consumption and happiness score. Since the plot was so scattered with no apparent pattern, it would be hard for any model to be able to predict the observations.
+
+Based on the distribution of 1000 very small $R^{2}$ values of < 0.1 from the regressions, we can see that the model does not generate data that is remotely similar to what was observed. Less than 10% of the variation in the observed happiness scores can be explained by the predicted happiness score over 1000 simulations. This makes sense since there did not end up being a pattern among the data or any large association between alcohol consumption per capita and happiness score. Since the plot was so scattered with no apparent pattern, it would be hard for any model to be able to predict the observations.
+
+
+### Conclusion
+
+Based on the regression coefficient = 1.001 we got from our regression model, we expected there to be a very weak positive association between alcohol consumption per capita and happiness score. However, upon inspecting the regression model’s fit to the data, we found the $R{^2}$ statistic to be .152, which means that only 15.2% of the variability in the happiness scores can actually be explained by alcohol consumption. This means there are likely many sources of extraneous variability; that is, many other factors that may impact happiness scores. So, as it turns out, we can’t necessarily use alcohol consumption per capita to predict happiness score within a country. Experimentation using random assignment, data collection with more observations, and the inclusion of possible interactions would likely improve the accuracy of the model we fit and allow us to get a better understanding of the association between alcohol consumption and happiness score.
