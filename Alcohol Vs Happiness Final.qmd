@@ -108,7 +108,7 @@ animate(actual_reg + transition_states(year,
   ), fps = 15, duration = 15, renderer = gifski_renderer())
 ```
 
-It appears from our linear regression model investigating the strength of the association between mean total alcohol consumption per capita in liters and mean happiness score that there is a weak positive association between these variables.
+Based on our linear regression model investigating the strength of the association between total alcohol consumption and happiness score by each year, we can see that there is a weak positive association between these variables every year. Overall, there is likely a weak positive association between mean total alcohol consumption and happiness score.
 
 ```{r}
 average_year <- final_data |> 
@@ -237,6 +237,7 @@ sim_reg <- ggplot(data = simulated, mapping = aes(x = alcohol_consumption, y = s
 
 actual_reg + sim_reg
 ```
+As we can see by the visualizations of observed data and simulated data, the two plots do look awfully similar, especially the linear regression lines which look almost the same. However, there are still many differences. The simulated data seems to have a larger variance than the observed data. The simulated data has larger and smaller extreme values than the observed data, and these extreme values seem to occur more often. Also, the data is clustered differently within the two plots. While the observed data has a large cluster around 0 liters of average alcohol consumption, the simulated does not and instead has a similar cluster around 10 liters of average alcohol consumption that the observed data does not have.
 
 ```{r}
 r2s <- vector()
