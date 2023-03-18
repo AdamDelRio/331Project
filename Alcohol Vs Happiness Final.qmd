@@ -192,7 +192,7 @@ model_fit <- round((fitted_var/(response_var))*100,
 By dividing the amount of variation in the fitted values (values from our predictive model) by the total variation in the observed responses, we obtain an $R^{2}$ statistic representing the amount of variation explained by our model. In other words, this statistic explains how well our model can predict the pattern in the data. Based on the $R^{2}$ we calculated for the model we fit, only `r model_fit`% of variability in the response values were accounted for by the regression model. With such a low $R^{2}$ this confirms that our model is unfit for the data.
 
 
-### Simulation
+## Simulation
 
 ```{r}
 noise <- function(x, mean = 0, sd){
@@ -268,9 +268,9 @@ ggplot(data = tibble(r2s), mapping = aes(x = r2s)) +
        subtitle = "Density")
 ```
 
-Based on the distribution of 1000 very small $R^{2}$ values of < 0.1 from the regressions, we can see that the model does not generate data that is remotely similar to what was observed. Less than 10% of the variation in the observed happiness scores can be explained by the predicted happiness score over 1000 simulations. This makes sense since there did not end up being a pattern among the data or any large association between alcohol consumption per capita and happiness score. Since the plot was so scattered with no apparent pattern, it would be hard for any model to be able to predict the observations.
+Based on the distribution of 1000 very small $R^{2}$ values of < 0.1 from the regressions, we can see that the model does not generate data that is remotely similar to what was observed. Less than 10% of the variation in the observed happiness scores can be explained by the predicted happiness score for all 1000 simulations. This makes sense since there did not end up being a pattern among the data or any large association between alcohol consumption per capita and happiness score. Since the plot was so scattered with no apparent pattern, it would be hard for any model to be able to predict the observations.
 
 
-### Conclusion
+## Conclusion
 
 Based on the regression coefficient = 1.001 we got from our regression model, we expected there to be a very weak positive association between alcohol consumption per capita and happiness score. However, upon inspecting the regression model’s fit to the data, we found the $R{^2}$ statistic to be .152, which means that only 15.2% of the variability in the happiness scores can actually be explained by alcohol consumption. This means there are likely many sources of extraneous variability; that is, many other factors that may impact happiness scores. So, as it turns out, we can’t necessarily use alcohol consumption per capita to predict happiness score within a country. Experimentation using random assignment, data collection with more observations, and the inclusion of possible interactions would likely improve the accuracy of the model we fit and allow us to get a better understanding of the association between alcohol consumption and happiness score.
