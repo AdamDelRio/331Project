@@ -85,6 +85,7 @@ final_data |>
                                   searching = TRUE, 
                                   info = TRUE))
 ```
+Our table contains 636 observations displaying mean happiness scores against mean alcohol consumptions. The maximum mean happiness score came from Denmark in 2004 at 80.2 pts, while the maximum mean alcohol consumption came from Moldova in 2004 at 19.9 L. The minimum mean happiness score came from Afghanistan in 2017 at 26.9 pts, while the minimum mean alcohol consumption came from Kuwait in both 2014 and 2017 at .003 L.
 
 
 ## Linear Regression
@@ -261,7 +262,7 @@ for (i in c(1:1000)){
 ggplot(data = tibble(r2s), mapping = aes(x = r2s)) +
   geom_histogram(aes(y = ..density..), fill = "skyblue") + 
   geom_density(color = "darkgrey", size = 1) +
-  theme_minimal() + 
+  theme_minimal(base_family = "Times New Roman") + 
   labs(x = bquote(R^2), y = "", title = "Histogram of 1000 Simulated R Squared Values",
        subtitle = "Density")
 ```
